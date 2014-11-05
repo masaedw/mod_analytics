@@ -45,6 +45,19 @@
 
 #include "ossp/uuid.h"
 
+static std::string make_uuid_str()
+{
+    uuid_t* id;
+    char* id_str;
+    uuid_create(&id);
+    uuid_make(id, UUID_MAKE_V1);
+    uuid_export(id, UUID_FMT_STR, &id_str, NULL);
+    std::string retVal(id_str);
+    free(id_str);
+    uuid_destroy(id);
+    return retVal;
+}
+
 /* The sample content handler */
 static int analytics_handler(request_rec *r)
 {
@@ -53,16 +66,9 @@ static int analytics_handler(request_rec *r)
     }
     r->content_type = "text/html";
 
-    uuid_t* id;
-    char* id_str;
-    uuid_create(&id);
-    uuid_make(id, UUID_MAKE_V1);
-    uuid_export(id, UUID_FMT_STR, &id_str, NULL);
+    std::string id_str = make_uuid_str();
     std::string sample = std::string("The sample page from mod_analytics.cpp\n") + id_str + "\n";
 
-    free(id_str);
-    uuid_destroy(id);
-    
     if (!r->header_only)
         ap_rputs(sample.c_str(), r);
     return OK;
