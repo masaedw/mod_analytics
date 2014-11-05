@@ -4,8 +4,8 @@
 ##
 
 builddir=.
-top_srcdir=/usr
-top_builddir=/usr
+top_srcdir=/usr/share/httpd
+top_builddir=/usr/share/httpd
 include /usr/share/httpd/build/special.mk
 
 #   the used tools
@@ -15,6 +15,8 @@ APACHECTL=apachectl
 #DEFS=-Dmy_define=my_value
 #INCLUDES=-Imy/include/dir
 #LIBS=-Lmy/lib/dir -lmylib
+
+CXX = g++
 
 #   the default target
 all: local-shared-build

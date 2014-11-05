@@ -37,6 +37,7 @@
 **    The sample page from mod_analytics.c
 */ 
 
+#include <iostream>
 #include "httpd.h"
 #include "http_config.h"
 #include "http_protocol.h"
@@ -48,10 +49,12 @@ static int analytics_handler(request_rec *r)
     if (strcmp(r->handler, "analytics")) {
         return DECLINED;
     }
-    r->content_type = "text/html";      
+    r->content_type = "text/html";
+
+    std::string sample = "The sample page from mod_analytics.cpp\n";
 
     if (!r->header_only)
-        ap_rputs("The sample page from mod_analytics.c\n", r);
+        ap_rputs(sample.c_str(), r);
     return OK;
 }
 
@@ -61,6 +64,8 @@ static void analytics_register_hooks(apr_pool_t *p)
 }
 
 /* Dispatch list for API hooks */
+
+extern "C" {
 module AP_MODULE_DECLARE_DATA analytics_module = {
     STANDARD20_MODULE_STUFF, 
     NULL,                  /* create per-dir    config structures */
@@ -70,4 +75,4 @@ module AP_MODULE_DECLARE_DATA analytics_module = {
     NULL,                  /* table of config file commands       */
     analytics_register_hooks  /* register hooks                      */
 };
-
+}
