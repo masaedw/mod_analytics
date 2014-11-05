@@ -13,8 +13,9 @@ APACHECTL=apachectl
 
 #   additional defines, includes and libraries
 #DEFS=-Dmy_define=my_value
-INCLUDES=-I/usr/local/include
-SH_LIBS=-L/usr/local/lib -luuid
+#INCLUDES=-I/usr/local/include
+#SH_LIBS=-L/usr/local/lib -luuid
+CXXFLAGS = -std=c++11
 
 CXX = g++
 

@@ -43,19 +43,18 @@
 #include "http_protocol.h"
 #include "ap_config.h"
 
-#include "ossp/uuid.h"
+#include <boost/uuid/uuid.hpp>
+#include <boost/uuid/uuid_io.hpp>
+#include <boost/uuid/uuid_generators.hpp>
+#include <boost/lexical_cast.hpp>
+
+using namespace boost::uuids;
 
 static std::string make_uuid_str()
 {
-    uuid_t* id;
-    char* id_str;
-    uuid_create(&id);
-    uuid_make(id, UUID_MAKE_V1);
-    uuid_export(id, UUID_FMT_STR, &id_str, NULL);
-    std::string retVal(id_str);
-    free(id_str);
-    uuid_destroy(id);
-    return retVal;
+    static auto gen = random_generator();
+    const uuid id = gen();
+    return boost::lexical_cast<std::string>(id);
 }
 
 /* The sample content handler */
@@ -67,7 +66,7 @@ static int analytics_handler(request_rec *r)
     r->content_type = "text/html";
 
     std::string id_str = make_uuid_str();
-    std::string sample = std::string("The sample page from mod_analytics.cpp\n") + id_str + "\n";
+    std::string sample = std::string("The sample page from mod_analytics.cpp ") + id_str + "\n";
 
     if (!r->header_only)
         ap_rputs(sample.c_str(), r);
