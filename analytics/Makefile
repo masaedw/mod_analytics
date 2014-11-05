@@ -17,7 +17,7 @@ APACHECTL=apachectl
 #SH_LIBS=-L/usr/local/lib -luuid
 CXXFLAGS = -std=c++11
 
-CXX = g++
+CXX = clang++
 
 #   the default target
 all: local-shared-build
