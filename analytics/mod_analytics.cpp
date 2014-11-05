@@ -43,6 +43,8 @@
 #include "http_protocol.h"
 #include "ap_config.h"
 
+#include "ossp/uuid.h"
+
 /* The sample content handler */
 static int analytics_handler(request_rec *r)
 {
@@ -51,8 +53,16 @@ static int analytics_handler(request_rec *r)
     }
     r->content_type = "text/html";
 
-    std::string sample = "The sample page from mod_analytics.cpp\n";
+    uuid_t* id;
+    char* id_str;
+    uuid_create(&id);
+    uuid_make(id, UUID_MAKE_V1);
+    uuid_export(id, UUID_FMT_STR, &id_str, NULL);
+    std::string sample = std::string("The sample page from mod_analytics.cpp\n") + id_str + "\n";
 
+    free(id_str);
+    uuid_destroy(id);
+    
     if (!r->header_only)
         ap_rputs(sample.c_str(), r);
     return OK;
